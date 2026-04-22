@@ -1,12 +1,13 @@
-from sqlalchemy import Column, Integer, String, Float
-from .database import Base
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from app.database import Base
 
 class Player(Base):
     __tablename__ = "players"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
-    team = Column(String(50))
+    team_id = Column(Integer, ForeignKey("teams.id"))
     role = Column(String(20))
 
     kd = Column(Float)
@@ -14,10 +15,23 @@ class Player(Base):
     kast = Column(Float)
     rating = Column(Float)
 
-    aim = Column(Float)
-    gamesense = Column(Float)
-    clutch = Column(Float)
-    aggression = Column(Float)
-    consistency = Column(Float)
-
     overall = Column(Float)
+
+class Team(Base):
+    __tablename__ = "teams"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+    ranking = Column(Integer)
+
+class Manager(Base):
+    __tablename__ = "managers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+    team_id = Column(Integer, ForeignKey("teams.id"), nullable=True)
+    budget = Column(Integer, default=1000000)
+    career_points = Column(Integer, default=0)
+
+    # Relationships (Optional but helpful for ORM)
+    team = relationship("Team")

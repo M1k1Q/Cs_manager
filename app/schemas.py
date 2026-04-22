@@ -2,17 +2,12 @@ from pydantic import BaseModel
 
 class PlayerCreate(BaseModel):
     name: str
-    team: str
+    team_id: int
     role: str
     kd: float
     adr: float
     kast: float
     rating: float
-    aim: float
-    gamesense: float
-    clutch: float
-    aggression: float
-    consistency: float
 
 
 class PlayerResponse(PlayerCreate):
@@ -21,3 +16,30 @@ class PlayerResponse(PlayerCreate):
 
     class Config:
         from_attributes = True
+
+class TeamCreate(BaseModel):
+    name: str
+    ranking: int
+
+class TeamResponse(TeamCreate):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class ManagerCreate(BaseModel):
+    name: str
+
+class ManagerResponse(BaseModel):
+    id: int
+    name: str
+    team_id: int | None = None
+    budget: int
+    career_points: int
+
+    class Config:
+        from_attributes = True
+
+class GameStatus(BaseModel):
+    manager: ManagerResponse
+    team: TeamResponse | None = None
